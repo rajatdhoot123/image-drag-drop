@@ -20,10 +20,15 @@ export default class Upload extends Component {
   };
 
   onDragStart = event => {
+      console.log(event.target)
     this.setState({
       dragImage: event.target.src
     });
   };
+
+  onDragEnd = event => {
+    event.target.src = this.state.dropImage;
+  }
 
   onDrop = event => {
     event.target.src = this.state.dragImage;
@@ -36,6 +41,7 @@ export default class Upload extends Component {
     });
   };
   render() {
+      //console.log(this.state,"State")
     return (
       <div className="row">
         <div className="col-md-3">
@@ -58,6 +64,7 @@ export default class Upload extends Component {
                   onDrop={this.onDrop}
                   draggable="true"
                   onDragStart={this.onDragStart}
+                  onDragEnd={this.onDragEnd}
                   src={
                     this.state.selectedFile[0]
                       ? this.state.selectedFile[0][1]
@@ -92,6 +99,7 @@ export default class Upload extends Component {
                   onDrop={this.onDrop}
                   draggable="true"
                   onDragStart={this.onDragStart}
+                  onDragEnd={this.onDragEnd}
                   src={
                     this.state.selectedFile[1]
                       ? this.state.selectedFile[1][1]
@@ -126,6 +134,7 @@ export default class Upload extends Component {
                   onDrop={this.onDrop}
                   draggable="true"
                   onDragStart={this.onDragStart}
+                  onDragEnd={this.onDragEnd}
                   src={
                     !!this.state.selectedFile[2]
                       ? this.state.selectedFile[2][1]
@@ -160,6 +169,7 @@ export default class Upload extends Component {
                   onDrop={this.onDrop}
                   draggable="true"
                   onDragStart={this.onDragStart}
+                  onDragEnd={this.onDragEnd}
                   src={
                     this.state.selectedFile[3]
                       ? this.state.selectedFile[3][1]
