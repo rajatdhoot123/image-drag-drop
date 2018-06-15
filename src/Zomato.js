@@ -16,11 +16,14 @@ export default class Upload extends Component {
         }
       }));
     };
-    reader.readAsDataURL(file);
+    try{
+        reader.readAsDataURL(file);
+    } catch(e) {
+
+    }
   };
 
   onDragStart = event => {
-      console.log(event.target)
     this.setState({
       dragImage: event.target.src
     });
@@ -28,7 +31,7 @@ export default class Upload extends Component {
 
   onDragEnd = event => {
     event.target.src = this.state.dropImage;
-  }
+  };
 
   onDrop = event => {
     event.target.src = this.state.dragImage;
@@ -36,15 +39,32 @@ export default class Upload extends Component {
 
   onDragOver = event => {
     event.preventDefault();
-    this.setState({
-      dropImage: event.target.src
-    });
+    if (this.state.dropImage !== event.target.src) {
+      this.setState({
+        dropImage: event.target.src
+      });
+    }
   };
+
+  componentDidMount() {
+    if (typeof Storage !== "undefined") {
+      if (localStorage.selectedFile) {
+        this.setState({
+          selectedFile: JSON.parse(localStorage.selectedFile)
+        });
+      }
+    }
+  }
+
+  componentDidUpdate() {
+    if (typeof(Storage) !== "undefined") {
+      localStorage.selectedFile = JSON.stringify(this.state.selectedFile)
+    }
+  }
   render() {
-      //console.log(this.state,"State")
     return (
       <div className="row">
-        <div className="col-md-3">
+        <div className="col-md-3 col-sm-6 col-xs-12">
           <div
             className="card mx-2"
             style={{
@@ -55,6 +75,7 @@ export default class Upload extends Component {
               <input
                 name="0"
                 type="file"
+                accept="image/*"
                 onChange={this.fileChangedHandler}
                 hidden
               />
@@ -65,6 +86,7 @@ export default class Upload extends Component {
                   draggable="true"
                   onDragStart={this.onDragStart}
                   onDragEnd={this.onDragEnd}
+                  name="0"
                   src={
                     this.state.selectedFile[0]
                       ? this.state.selectedFile[0][1]
@@ -79,7 +101,7 @@ export default class Upload extends Component {
             </label>
           </div>
         </div>
-        <div className="col-md-3">
+        <div className="col-md-3 col-sm-6 col-xs-12">
           <div
             className="card mx-2"
             style={{
@@ -90,11 +112,13 @@ export default class Upload extends Component {
               <input
                 name="1"
                 type="file"
+                accept="image/*"
                 onChange={this.fileChangedHandler}
                 hidden
               />
               <div className="drag-text" style={{ height: "300px" }}>
                 <img
+                  name="1"
                   onDragOver={this.onDragOver}
                   onDrop={this.onDrop}
                   draggable="true"
@@ -114,7 +138,7 @@ export default class Upload extends Component {
             </label>
           </div>
         </div>
-        <div className="col-md-3">
+        <div className="col-md-3 col-sm-6 col-xs-12">
           <div
             className="card mx-2"
             style={{
@@ -125,11 +149,13 @@ export default class Upload extends Component {
               <input
                 name="2"
                 type="file"
+                accept="image/*"
                 onChange={this.fileChangedHandler}
                 hidden
               />
               <div className="drag-text" style={{ height: "300px" }}>
                 <img
+                  name="2"
                   onDragOver={this.onDragOver}
                   onDrop={this.onDrop}
                   draggable="true"
@@ -149,7 +175,7 @@ export default class Upload extends Component {
             </label>
           </div>
         </div>
-        <div className="col-md-3">
+        <div className="col-md-3 col-sm-6 col-xs-12">
           <div
             className="card mx-2"
             style={{
@@ -160,11 +186,13 @@ export default class Upload extends Component {
               <input
                 name="3"
                 type="file"
+                accept="image/*"
                 onChange={this.fileChangedHandler}
                 hidden
               />
               <div className="drag-text" style={{ height: "300px" }}>
                 <img
+                  name="3"
                   onDragOver={this.onDragOver}
                   onDrop={this.onDrop}
                   draggable="true"
