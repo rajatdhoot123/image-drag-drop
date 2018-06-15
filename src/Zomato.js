@@ -2,130 +2,109 @@ import React, { Component } from "react";
 import Dropzone from "react-dropzone";
 
 export default class Upload extends Component {
-  state = { files: {}, temp: null };
+  state = { selectedFile: {} };
 
+  fileChangedHandler = event => {
+    event.preventDefault();
+    let reader = new FileReader();
+    let file = event.target.files[0];
+    let name = event.target.name
+    reader.onloadend = () => {
+      this.setState(prevState => ({
+        selectedFile: {...prevState.selectedFile, [name]: [file,reader.result]},
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
 
-  onDrop(id, files) {
-    if(files.length == 0){
-        return
-    }
-    this.setState(prevState => ({
-      files: { ...prevState.files, [id]: files[0] }
-    }));
-  }
-
-  onDragEnter = (file,event) => {
-    const dt = event.dataTransfer;
-    if ( !(
-        dt.types &&
-        ( dt.types.indexOf ? dt.types.indexOf( "Files" ) !== -1 : dt.types.contains( "Files" ) )
-    ) ) {
-        this.setState( { isDragActive: false } );
-    }
-      console.log(file,"files",event,"event")
-  }
+  uploadHandler = () => {
+    console.log(this.state.selectedFile);
+  };
 
   render() {
-      console.log(this.state,"state")
+    console.log(this.state, "state");
     return (
       <div className="row">
         <div className="col-md-3">
-          <div className="card mx-2" style={{ height: "300px" }}>
-            <Dropzone
-              onDragEnter={this.onDragEnter.bind(this,0)}
-              accept="image/jpeg,image/jpg,image/tiff,image/gif,image/png"
-              multiple={false}
-              onDrop={this.onDrop.bind(this, 0)}
-              style={{
-                width: "100%",
-                height: "300px",
-                backgroundImage: this.state.files[0]
-                  ? `url(${this.state.files[0].preview})`
-                  : ""
-              }}
-            >
-              {!this.state.files[0] && (
-                <p>
-                  Try dropping some files here, or click to select files to
-                  upload.
-                </p>
-              )}
-            </Dropzone>
+          <div
+            className="card mx-2"
+            style={{
+              height: "300px",
+              backgroundImage: `url(${
+                this.state.selectedFile[0] ? this.state.selectedFile[0][1] : ""
+              })`
+            }}
+          >
+            <label className="btn btn-default" style={{ height: "300px" }}>
+              <input
+                name="0"
+                type="file"
+                onChange={this.fileChangedHandler}
+                hidden
+              />
+            </label>
           </div>
         </div>
         <div className="col-md-3">
-          <div className="card mx-2" style={{ height: "300px" }}>
-            <Dropzone
-              onDragEnter={this.onDragEnter.bind(this,1)}
-              accept="image/jpeg,image/jpg,image/tiff,image/gif,image/png"
-              multiple={false}
-              onDrop={this.onDrop.bind(this, 1)}
-              style={{
-                width: "100%",
-                height: "300px",
-                backgroundImage: this.state.files[1]
-                  ? `url(${this.state.files[1].preview})`
-                  : ""
-              }}
-            >
-              {!this.state.files[1] && (
-                <p>
-                  Try dropping some files here, or click to select files to
-                  upload.
-                </p>
-              )}
-            </Dropzone>
+          <div
+            className="card mx-2"
+            style={{
+              height: "300px",
+              backgroundImage: `url(${
+                this.state.selectedFile[1] ? this.state.selectedFile[1][1] : ""
+              })`
+            }}
+          >
+            <label className="btn btn-default" style={{ height: "300px" }}>
+              <input
+                name="1"
+                type="file"
+                onChange={this.fileChangedHandler}
+                hidden
+              />
+            </label>
           </div>
         </div>
         <div className="col-md-3">
-          <div className="card mx-2" style={{ height: "300px" }}>
-            <Dropzone
-              onDragEnter={this.onDragEnter.bind(this,2)}
-              accept="image/jpeg,image/jpg,image/tiff,image/gif,image/png"
-              multiple={false}
-              onDrop={this.onDrop.bind(this, 2)}
-              style={{
-                width: "100%",
-                height: "300px",
-                backgroundImage: this.state.files[2]
-                  ? `url(${this.state.files[2].preview})`
-                  : ""
-              }}
-            >
-              {!this.state.files[2] && (
-                <p>
-                  Try dropping some files here, or click to select files to
-                  upload.
-                </p>
-              )}
-            </Dropzone>
+          <div
+            className="card mx-2"
+            style={{
+              height: "300px",
+              backgroundImage: `url(${
+                this.state.selectedFile[2] ? this.state.selectedFile[2][1] : ""
+              })`
+            }}
+          >
+            <label className="btn btn-default" style={{ height: "300px" }}>
+              <input
+                name="2"
+                type="file"
+                onChange={this.fileChangedHandler}
+                hidden
+              />
+            </label>
           </div>
         </div>
         <div className="col-md-3">
-          <div className="card mx-2" style={{ height: "300px" }}>
-            <Dropzone
-              onDragEnter={this.onDragEnter.bind(this,3)}
-              accept="image/jpeg,image/jpg,image/tiff,image/gif,image/png"
-              multiple={false}
-              onDrop={this.onDrop.bind(this, 3)}
-              style={{
-                width: "100%",
-                height: "300px",
-                backgroundImage: this.state.files[3]
-                  ? `url(${this.state.files[3].preview})`
-                  : ""
-              }}
-            >
-              {!this.state.files[3] && (
-                <p>
-                  Try dropping some files here, or click to select files to
-                  upload.
-                </p>
-              )}
-            </Dropzone>
+          <div
+            className="card mx-2"
+            style={{
+              height: "300px",
+              backgroundImage: `url(${
+                this.state.selectedFile[3] ? this.state.selectedFile[3][1] : ""
+              })`
+            }}
+          >
+            <label className="btn btn-default" style={{ height: "300px" }}>
+              <input
+                name="3"
+                type="file"
+                onChange={this.fileChangedHandler}
+                hidden
+              />
+            </label>
           </div>
         </div>
-        
       </div>
     );
   }
