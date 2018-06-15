@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 export default class Upload extends Component {
-  state = { selectedFile: {}, dragImage: "", dropImage: "" };
+  state = { selectedFile: {}, temp: { drag: null, drop: null } };
 
   fileChangedHandler = event => {
     event.preventDefault();
@@ -16,28 +16,43 @@ export default class Upload extends Component {
         }
       }));
     };
-    try{
-        reader.readAsDataURL(file);
-    } catch(e) {
-
-    }
+    try {
+      reader.readAsDataURL(file);
+    } catch (e) {}
   };
 
-  onDragStart = event => {
-    this.setState({
-      dragImage: event.target.src
-    });
+  onDragStart = (file, event) => {
+    let src = event.target.src;
+    let name = event.target.name;
+    this.setState(prevState => ({
+      dragImage: src,
+      temp: { ...prevState.temp, drag: { [name]: file } }
+    }));
   };
 
-  onDragEnd = event => {
-    event.target.src = this.state.dropImage;
+  onDrop = (file, event) => {
+    let src = event.target.src;
+    let name = event.target.name;
+    this.setState(
+      prevState => ({
+        dragImage: src,
+        selectedFile: {
+          ...prevState.selectedFile,
+          [name]: Object.values(prevState.temp.drag)[0]
+        },
+        temp: { ...prevState.temp, drop: { [name]: file } }
+      }),
+      () =>
+        this.setState(prevState => ({
+          selectedFile: {
+            ...prevState.selectedFile,
+            [Object.keys(prevState.temp.drag)[0]]: file
+          }
+        }))
+    );
   };
 
-  onDrop = event => {
-    event.target.src = this.state.dragImage;
-  };
-
-  onDragOver = event => {
+  onDragOver = (file, event) => {
     event.preventDefault();
     if (this.state.dropImage !== event.target.src) {
       this.setState({
@@ -57,8 +72,8 @@ export default class Upload extends Component {
   }
 
   componentDidUpdate() {
-    if (typeof(Storage) !== "undefined") {
-      localStorage.selectedFile = JSON.stringify(this.state.selectedFile)
+    if (typeof Storage !== "undefined") {
+      localStorage.selectedFile = JSON.stringify(this.state.selectedFile);
     }
   }
   render() {
@@ -81,11 +96,16 @@ export default class Upload extends Component {
               />
               <div className="drag-text" style={{ height: "300px" }}>
                 <img
-                  onDragOver={this.onDragOver}
-                  onDrop={this.onDrop}
+                  onDragOver={this.onDragOver.bind(
+                    this,
+                    this.state.selectedFile[0]
+                  )}
+                  onDrop={this.onDrop.bind(this, this.state.selectedFile[0])}
                   draggable="true"
-                  onDragStart={this.onDragStart}
-                  onDragEnd={this.onDragEnd}
+                  onDragStart={this.onDragStart.bind(
+                    this,
+                    this.state.selectedFile[0]
+                  )}
                   name="0"
                   src={
                     this.state.selectedFile[0]
@@ -119,11 +139,16 @@ export default class Upload extends Component {
               <div className="drag-text" style={{ height: "300px" }}>
                 <img
                   name="1"
-                  onDragOver={this.onDragOver}
-                  onDrop={this.onDrop}
+                  onDragOver={this.onDragOver.bind(
+                    this,
+                    this.state.selectedFile[1]
+                  )}
+                  onDrop={this.onDrop.bind(this, this.state.selectedFile[1])}
                   draggable="true"
-                  onDragStart={this.onDragStart}
-                  onDragEnd={this.onDragEnd}
+                  onDragStart={this.onDragStart.bind(
+                    this,
+                    this.state.selectedFile[1]
+                  )}
                   src={
                     this.state.selectedFile[1]
                       ? this.state.selectedFile[1][1]
@@ -156,11 +181,16 @@ export default class Upload extends Component {
               <div className="drag-text" style={{ height: "300px" }}>
                 <img
                   name="2"
-                  onDragOver={this.onDragOver}
-                  onDrop={this.onDrop}
+                  onDragOver={this.onDragOver.bind(
+                    this,
+                    this.state.selectedFile[2]
+                  )}
+                  onDrop={this.onDrop.bind(this, this.state.selectedFile[2])}
                   draggable="true"
-                  onDragStart={this.onDragStart}
-                  onDragEnd={this.onDragEnd}
+                  onDragStart={this.onDragStart.bind(
+                    this,
+                    this.state.selectedFile[2]
+                  )}
                   src={
                     !!this.state.selectedFile[2]
                       ? this.state.selectedFile[2][1]
@@ -193,11 +223,16 @@ export default class Upload extends Component {
               <div className="drag-text" style={{ height: "300px" }}>
                 <img
                   name="3"
-                  onDragOver={this.onDragOver}
-                  onDrop={this.onDrop}
+                  onDragOver={this.onDragOver.bind(
+                    this,
+                    this.state.selectedFile[3]
+                  )}
+                  onDrop={this.onDrop.bind(this, this.state.selectedFile[3])}
                   draggable="true"
-                  onDragStart={this.onDragStart}
-                  onDragEnd={this.onDragEnd}
+                  onDragStart={this.onDragStart.bind(
+                    this,
+                    this.state.selectedFile[3]
+                  )}
                   src={
                     this.state.selectedFile[3]
                       ? this.state.selectedFile[3][1]
